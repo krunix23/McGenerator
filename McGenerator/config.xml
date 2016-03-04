@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<body>
+	<camera type="1013G-11111">
+		<MACNext>00:0c:8d:82:00:23</MACNext>
+	</camera>
+	<camera type="1013G-B0100">
+		<MACNext>00:19:31:20:41:0f</MACNext>
+	</camera>
+</body>
