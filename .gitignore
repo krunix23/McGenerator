@@ -6,3 +6,4 @@ McGenerator/bin/Debug/McGenerator.vshost.exe.config
 McGenerator/bin/Debug/McGenerator.vshost.exe.manifest
 McGenerator/obj/
 
+McGenerator/McGenerator.csproj.user

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <body>
-	<camera type="1013G-11111" mac="00:0c:8d:82:00:23"/>
-	<camera type="1013G-B0100" mac="00:19:31:20:40:00"/>
-  <camera type="1013G-B0200" mac="00:19:31:20:60:00"/>
+	<camera type="1013G-11111" mac="00:0c:8d:82:00:23" step="1"/>
+	<camera type="1013G-B0100" mac="00:19:31:20:40:00" step="5"/>
+  <camera type="1013G-B0200" mac="00:19:31:20:60:00" step="1"/>
 </body>

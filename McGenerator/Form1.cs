@@ -26,7 +26,7 @@ namespace McGenerator
             {
                 typeComboBox.Items.Add(types[i]);
             }
-            typeComboBox.SelectedIndex = 1;
+            typeComboBox.SelectedIndex = 0;
         }
 
         public void WriteLogMessage(string msg, LogCategory lc )
@@ -60,7 +60,11 @@ namespace McGenerator
 
         private void generateButton_Click(object sender, EventArgs e)
         {
-            logger.Log(string.Format("{0}",macTextBox.Text), LogCategory.lcMessage);
+            string mac = macTextBox.Text;
+            string smac = ConfigHandler.MACInt64ToString(ConfigHandler.MACStringToInt64(mac));
+            string type = typeComboBox.SelectedItem.ToString();
+            cfg.GenerateSpreadsheet(type, smac, numericUpDown.Value);
+            //logger.Log(string.Format("{0}",smac), LogCategory.lcMessage);
         }
     }
 }
