@@ -7,3 +7,4 @@ McGenerator/bin/Debug/McGenerator.vshost.exe.manifest
 McGenerator/obj/
 
 McGenerator/McGenerator.csproj.user
+McGenerator/bin/Debug/*.xlsx
