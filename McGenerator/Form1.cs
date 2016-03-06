@@ -12,19 +12,19 @@ namespace McGenerator
 {
     public partial class Form1 : Form
     {
-        private Logger logger;
-        private ConfigHandler cfg;
+        private Logger logger_;
+        private ConfigHandler cfg_;
         public Form1()
         {
             InitializeComponent();
             WriteLogMessage("GUI initialized", LogCategory.lcMessage);
-            logger = new Logger(this);
-            cfg = new ConfigHandler(logger);
+            logger_ = new Logger(this);
+            cfg_ = new ConfigHandler(logger_);
 
-            string[] types = cfg.GetAllTypes();
-            for(int i = 0; i < types.Length; i++ )
+            string[] sTypes = cfg_.GetAllTypes();
+            for(int i = 0; i < sTypes.Length; i++ )
             {
-                typeComboBox.Items.Add(types[i]);
+                typeComboBox.Items.Add(sTypes[i]);
             }
             typeComboBox.SelectedIndex = 0;
         }
@@ -49,21 +49,21 @@ namespace McGenerator
 
         private void typeComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string type = typeComboBox.SelectedItem.ToString();
-            string mac = cfg.GetDefaultMAC(type);
-            logger.Log(string.Format("Selected camera type: {0}", type), LogCategory.lcMessage);
-            if( mac != string.Empty)
+            string sType = typeComboBox.SelectedItem.ToString();
+            string sMac = cfg_.GetDefaultMAC(sType);
+            logger_.Log(string.Format("Selected camera type: {0}", sType), LogCategory.lcMessage);
+            if( sMac != string.Empty)
             {
-                macTextBox.Text = mac;
+                macTextBox.Text = sMac;
             }
         }
 
         private void generateButton_Click(object sender, EventArgs e)
         {
-            string mac = macTextBox.Text;
-            string smac = ConfigHandler.MACInt64ToString(ConfigHandler.MACStringToInt64(mac));
-            string type = typeComboBox.SelectedItem.ToString();
-            cfg.GenerateSpreadsheet(type, smac, numericUpDown.Value);
+            string Mac = macTextBox.Text;
+            string sMac = ConfigHandler.MACInt64ToString(ConfigHandler.MACStringToInt64(Mac));
+            string sType = typeComboBox.SelectedItem.ToString();
+            cfg_.GenerateSpreadsheet(sType, sMac, numericUpDown.Value);
             //logger.Log(string.Format("{0}",smac), LogCategory.lcMessage);
         }
     }

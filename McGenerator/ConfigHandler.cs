@@ -12,44 +12,44 @@ namespace McGenerator
 {
     class ConfigHandler
     {
-        private Logger logger;
-        XmlDocument cfgdoc;
+        private Logger logger_;
+        XmlDocument cfgdoc_;
 
-        public ConfigHandler(Logger logger_)
+        public ConfigHandler(Logger logger)
         {
-            logger = logger_;
+            logger_ = logger;
 
             try
             {
-                cfgdoc = new XmlDocument();
-                cfgdoc.Load("config.xml");
+                cfgdoc_ = new XmlDocument();
+                cfgdoc_.Load("config.xml");
             }
             catch( SystemException ex )
             {
-                logger.Log(ex.Message, LogCategory.lcError);
+                logger_.Log(string.Format("{0}(): {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message), LogCategory.lcError);
             }
-            logger.Log("Created ConfigHandler", LogCategory.lcMessage);
+            logger_.Log("Created ConfigHandler", LogCategory.lcMessage);
         }
 
         public string[] GetAllTypes()
         {
             try
             {
-                XmlNodeList elemList = cfgdoc.GetElementsByTagName("camera");
-                string[] result = new string[elemList.Count];
+                XmlNodeList elemList = cfgdoc_.GetElementsByTagName("camera");
+                string[] sResults = new string[elemList.Count];
 
                 for (int i = 0; i < elemList.Count; i++)
                 {
                     string attrType = elemList[i].Attributes["type"].Value;
                     string attrMac = elemList[i].Attributes["mac"].Value;
-                    logger.Log(string.Format("{0}: {1}", attrType, attrMac), LogCategory.lcMessage);
-                    result[i] = attrType;
+                    logger_.Log(string.Format("Definition found for: {0} - {1}", attrType, attrMac), LogCategory.lcMessage);
+                    sResults[i] = attrType;
                 }
-                return result;
+                return sResults;
             }
             catch( SystemException ex)
             {
-                logger.Log(ex.Message, LogCategory.lcError);
+                logger_.Log(string.Format("{0}(): {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message), LogCategory.lcError);
                 return null;
             }
         }
@@ -58,7 +58,7 @@ namespace McGenerator
         {
             try
             {
-                XmlNodeList elemList = cfgdoc.GetElementsByTagName("camera");
+                XmlNodeList elemList = cfgdoc_.GetElementsByTagName("camera");
 
                 for (int i = 0; i < elemList.Count; i++)
                 {
@@ -70,90 +70,89 @@ namespace McGenerator
             }
             catch (SystemException ex)
             {
-                logger.Log(ex.Message, LogCategory.lcError);
+                logger_.Log(string.Format("{0}(): {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message), LogCategory.lcError);
             }
-
             return string.Empty;
         }
 
         public static Int64 MACStringToInt64(string smac)
         {
-            Int64 result = 0;
+            Int64 iResult = 0;
 
             if(smac != string.Empty)
             {
                 try
                 {
                     string value = smac.Replace(":", "");
-                    result = Convert.ToInt64(value, 16);
+                    iResult = Convert.ToInt64(value, 16);
                 }
                 catch {}
             }
-            return result;
+            return iResult;
         }
 
         public static string MACInt64ToString(Int64 imac)
         {
             if(imac != 0)
             {
-                string smac = string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}",
-                    ((imac >> 40) & 0xff),
-                    ((imac >> 32) & 0xff),
-                    ((imac >> 24) & 0xff),
-                    ((imac >> 16) & 0xff),
-                    ((imac >> 8) & 0xff),
-                    ((imac >> 0) & 0xff));
-                return smac;
+                string sMac = string.Format("{0:X2}:{1:X2}:{2:X2}:{3:X2}:{4:X2}:{5:X2}",
+                     ((imac >> 40) & 0xff),
+                     ((imac >> 32) & 0xff),
+                     ((imac >> 24) & 0xff),
+                     ((imac >> 16) & 0xff),
+                     ((imac >> 8) & 0xff),
+                     ((imac >> 0) & 0xff));
+                return sMac;
             }
             return string.Empty;
         }
 
-        public void GenerateSpreadsheet(string type, string MAC1st, decimal numMACs)
+        public void GenerateSpreadsheet(string type, string mac1st, decimal nummacs)
         {
-            if (MAC1st == string.Empty || Decimal.ToInt32(numMACs) == 0)
+            if (mac1st == string.Empty || Decimal.ToInt32(nummacs) == 0)
             {
                 return;
             }
 
             try
             {
-                string[] macs = new string[Decimal.ToInt32(numMACs)];
-                XmlNodeList elemList = cfgdoc.GetElementsByTagName("camera");
-                int stepwidth = 0;
-                SLDocument sldoc = new SLDocument();
-                sldoc.SetColumnWidth("A", 25.0);
+                string[] sMacs = new string[Decimal.ToInt32(nummacs)];
+                XmlNodeList elemList = cfgdoc_.GetElementsByTagName("camera");
+                int iStepWidth = 0;
+                SLDocument slDoc = new SLDocument();
+                slDoc.SetColumnWidth("A", 25.0);
 
                 for (int i = 0; i < elemList.Count; i++)
                 {
                     if (elemList[i].Attributes["type"].Value == type)
                     {
-                        stepwidth = int.Parse(elemList[i].Attributes["step"].Value);
+                        iStepWidth = int.Parse(elemList[i].Attributes["step"].Value);
                     }
                 }
 
-                macs[0] = MAC1st;
+                sMacs[0] = mac1st;
 
-                for( int i = 1; i < Decimal.ToInt32(numMACs); i++)
+                for( int i = 1; i < Decimal.ToInt32(nummacs); i++)
                 {
                     
-                    string tmpMAC = macs[i - 1];
+                    string tmpMAC = sMacs[i - 1];
                     Int64 iMAC = MACStringToInt64(tmpMAC);
-                    iMAC += stepwidth;
-                    macs[i] = MACInt64ToString(iMAC);
+                    iMAC += iStepWidth;
+                    sMacs[i] = MACInt64ToString(iMAC);
                 }
 
-                for (int i = 0; i < macs.Length; i++ )
+                for (int i = 0; i < sMacs.Length; i++ )
                 {
-                    string cell = "A" + (i + 1).ToString();
-                    sldoc.SetCellValue(cell, macs[i]);
-                    logger.Log(string.Format("New MAC: {0}", macs[i]), LogCategory.lcMessage);
+                    string sCell = "A" + (i + 1).ToString();
+                    slDoc.SetCellValue(sCell, sMacs[i]);
+                    logger_.Log(string.Format("New MAC: {0}", sMacs[i]), LogCategory.lcMessage);
                 }
 
-                sldoc.SaveAs(type + ".xlsx");
+                slDoc.SaveAs(type + ".xlsx");
             }
             catch(SystemException ex)
             {
-                logger.Log(ex.Message, LogCategory.lcError);
+                logger_.Log(string.Format("{0}(): {1}", System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message), LogCategory.lcError);
             }
         }
     }
