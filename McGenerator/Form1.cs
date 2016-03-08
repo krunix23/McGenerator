@@ -40,6 +40,9 @@ namespace McGenerator
                 case LogCategory.lcError:
                     richTextBox.SelectionColor = Color.Red;
                     break;
+                case LogCategory.lcResultOK:
+                    richTextBox.SelectionColor = Color.DarkGreen;
+                    break;
                 default:
                     break;
             }

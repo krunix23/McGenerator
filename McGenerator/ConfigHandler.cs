@@ -149,6 +149,7 @@ namespace McGenerator
                 }
 
                 slDoc.SaveAs(type + ".xlsx");
+                logger_.Log(string.Format("Saved {0} MACs to {1}.xlsx", sMacs.Length, type), LogCategory.lcResultOK);
             }
             catch(SystemException ex)
             {

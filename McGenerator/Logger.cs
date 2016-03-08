@@ -12,6 +12,7 @@ namespace McGenerator
         lcMessage = 0,
         lcWarning = 1,
         lcError = 2,
+        lcResultOK = 3,
     }
 
     class Logger
